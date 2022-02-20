@@ -1,0 +1,763 @@
+[
+    {
+        "id": "be2909de.a014e",
+        "type": "tab",
+        "label": "Weatherlink 2022-02-20",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "1d8e7d63.a33d13",
+        "type": "inject",
+        "z": "be2909de.a014e",
+        "name": "Inject",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "20",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "ba3c547e39133bb9"
+            ]
+        ]
+    },
+    {
+        "id": "753a8dbc.3f2b04",
+        "type": "debug",
+        "z": "be2909de.a014e",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 330,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "c673a90c.b51e58",
+        "type": "function",
+        "z": "be2909de.a014e",
+        "name": "wind_ten_min_gust/avg_m/s",
+        "func": "let msg0 = {}; // Convert from mph to m/s\nmsg0.payload = (parseFloat(msg.payload.sensors[0].data[0].wind_speed_10_min_avg) * 0.44704).toFixed(1);\nmsg0.topic = \"Wind average 10 minutes\";\n\nlet msg1 = {};\nmsg1.payload = (parseFloat(msg.payload.sensors[0].data[0].wind_gust_10_min) * 0.44704).toFixed(1);\nmsg1.topic = \"Wind gust 10 minutes\";\n\nlet msg2 = {};\nmsg2.payload = \"<table> <tr> <td>Average 10 minutes</td> <td>\"+ msg0.payload + \" </td> <td> m/s</td> </tr> <tr> <td>Gust 10 minutes</td> <td>\"+ msg1.payload + \"</td> <td> m/s </td> </tr></table> \";\n\nreturn [msg1, msg0, msg2];\n",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 380,
+        "wires": [
+            [
+                "56226128.15c4c8"
+            ],
+            [
+                "56226128.15c4c8"
+            ],
+            [
+                "25fc6edf.7c2b62"
+            ]
+        ]
+    },
+    {
+        "id": "5ce0462f.a6e83",
+        "type": "change",
+        "z": "be2909de.a014e",
+        "name": "Wind_degrees",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.sensors[0].data[0].wind_dir",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 320,
+        "wires": [
+            [
+                "fad06787.0c684"
+            ]
+        ]
+    },
+    {
+        "id": "fad06787.0c684",
+        "type": "ui_gauge",
+        "z": "be2909de.a014e",
+        "name": "",
+        "group": "140972ad.fcd4c5",
+        "order": 2,
+        "width": "6",
+        "height": "5",
+        "gtype": "compass",
+        "title": "<h4>Wind direction<h4/>",
+        "label": "Degrees",
+        "format": "{{value|number:0}}",
+        "min": 0,
+        "max": "360",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 670,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "91feca5c.b6d5c",
+        "type": "ui_chart",
+        "z": "be2909de.a014e",
+        "name": "",
+        "group": "d05673f6.d572a",
+        "order": 1,
+        "width": "6",
+        "height": "4",
+        "label": "Temperature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "6",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#ff2600",
+            "#00f900",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 2,
+        "x": 890,
+        "y": 240,
+        "wires": [
+            [],
+            []
+        ],
+        "outputLabels": [
+            "Snitt vind",
+            "Vind byar"
+        ]
+    },
+    {
+        "id": "56226128.15c4c8",
+        "type": "ui_chart",
+        "z": "be2909de.a014e",
+        "name": "",
+        "group": "d05673f6.d572a",
+        "order": 2,
+        "width": "6",
+        "height": "4",
+        "label": "Wind",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "6",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#ff2600",
+            "#00f900",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 2,
+        "x": 870,
+        "y": 340,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "1fbe1d45.3aa07b",
+        "type": "inject",
+        "z": "be2909de.a014e",
+        "name": "Reset Charts",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "x": 690,
+        "y": 200,
+        "wires": [
+            [
+                "56226128.15c4c8",
+                "91feca5c.b6d5c",
+                "9ad237b4.6de65",
+                "806d5e5.8b4532"
+            ]
+        ]
+    },
+    {
+        "id": "8fcdd649.1efa28",
+        "type": "ui_text",
+        "z": "be2909de.a014e",
+        "group": "926fa082.651",
+        "order": 1,
+        "width": "6",
+        "height": "4",
+        "name": "",
+        "label": "<h1>Forecast<h1/>",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 1090,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "a40e65e2.63ebb8",
+        "type": "function",
+        "z": "be2909de.a014e",
+        "name": "Sun rise/set",
+        "func": "let forecast = msg.payload.sensors[0].data[0].forecast_desc\n\nvar msg = {};\nmsg.payload = forecast;\n\nreturn msg ",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 80,
+        "wires": [
+            [
+                "8fcdd649.1efa28"
+            ]
+        ]
+    },
+    {
+        "id": "e718ff4c.8da0a",
+        "type": "change",
+        "z": "be2909de.a014e",
+        "name": "pressure_inHG_to_mb",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round($number(payload.sensors[0].data[0].bar*33.86),1)",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Pressure",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 440,
+        "wires": [
+            [
+                "9ad237b4.6de65"
+            ]
+        ]
+    },
+    {
+        "id": "a3c8d2de.35a028",
+        "type": "function",
+        "z": "be2909de.a014e",
+        "name": "temp. outside C/\"Feels like\"",
+        "func": "// Temp \"Feels like\" according to BOM http://www.bom.gov.au/info/thermal_stress/#atapproximation\n\nconst temp_C = (msg.payload.sensors[0].data[0].temp_out -32)*0.556;\n\nlet msg0 = {};   // Temp \"Feels like\" \nlet waterPress = (parseFloat(msg.payload.sensors[0].data[0].hum_out) / 100) * 6.105 * Math.exp((17.27 * parseFloat(temp_C)) / (237.7 + parseFloat(temp_C)))\nmsg0.payload = (parseFloat(temp_C) + 0.33 * waterPress - 0.7 * (parseFloat(msg.payload.sensors[0].data[0].wind_speed_10_min_avg)*0.44704) - 4).toFixed(1);\nmsg0.topic = \"Temperature feels like\";\n\nlet msg1 = {};\nmsg1.payload = temp_C.toFixed(1);\nmsg1.topic = \"Temperature outdoor\";\n\nlet msg2 = {};\nmsg2.payload = \"<table> <tr> <td>Outside</td> <td>\"+ msg1.payload + \" </td> <td> °C </td> </tr> <tr> <td>Feels like</td> <td>\"+ msg0.payload + \"</td> <td> °C </td> </tr></table> \";\n\nreturn [msg0, msg1, msg2];\n",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 260,
+        "wires": [
+            [
+                "91feca5c.b6d5c"
+            ],
+            [
+                "91feca5c.b6d5c"
+            ],
+            [
+                "a6e798b9.ec4e3"
+            ]
+        ]
+    },
+    {
+        "id": "9ad237b4.6de65",
+        "type": "ui_chart",
+        "z": "be2909de.a014e",
+        "name": "",
+        "group": "d05673f6.d572a",
+        "order": 3,
+        "width": "6",
+        "height": "4",
+        "label": "Pressure ",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "6",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#00f900",
+            "#00f900",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 2,
+        "x": 880,
+        "y": 440,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a6e798b9.ec4e3",
+        "type": "ui_text",
+        "z": "be2909de.a014e",
+        "group": "140972ad.fcd4c5",
+        "order": 1,
+        "width": "6",
+        "height": "4",
+        "name": "Temperature",
+        "label": "<h1> Temperature <h1/>",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 630,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "25fc6edf.7c2b62",
+        "type": "ui_text",
+        "z": "be2909de.a014e",
+        "group": "140972ad.fcd4c5",
+        "order": 3,
+        "width": "6",
+        "height": "3",
+        "name": "Wind",
+        "label": "<h1>Wind</h1>",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 610,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "1ae93dd8.78031a",
+        "type": "comment",
+        "z": "be2909de.a014e",
+        "name": "Get input",
+        "info": "",
+        "x": 80,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "a48c745c.66121",
+        "type": "comment",
+        "z": "be2909de.a014e",
+        "name": "Calculation",
+        "info": "",
+        "x": 320,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "9e32516f.98cc18",
+        "type": "comment",
+        "z": "be2909de.a014e",
+        "name": "Column_1",
+        "info": "",
+        "x": 620,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "e9361e92.e50b8",
+        "type": "comment",
+        "z": "be2909de.a014e",
+        "name": "Column_2",
+        "info": "",
+        "x": 880,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c3ac0ca6.ed2ab",
+        "type": "comment",
+        "z": "be2909de.a014e",
+        "name": "Column_3",
+        "info": "",
+        "x": 1060,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "806d5e5.8b4532",
+        "type": "ui_chart",
+        "z": "be2909de.a014e",
+        "name": "",
+        "group": "926fa082.651",
+        "order": 2,
+        "width": "6",
+        "height": "4",
+        "label": "Rain",
+        "chartType": "bar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "8",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#00f900",
+            "#00fdff",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 2,
+        "x": 1050,
+        "y": 140,
+        "wires": [
+            [],
+            []
+        ],
+        "outputLabels": [
+            "Snitt vind",
+            "Vind byar"
+        ]
+    },
+    {
+        "id": "e0ab754d.b2172",
+        "type": "function",
+        "z": "be2909de.a014e",
+        "name": "Rain ",
+        "func": "let msg0 = {}; // Get the Rain values\nmsg0.payload = msg.payload.sensors[0].data[0].rain_day_mm;\nmsg0.topic = \"Day mm\";\n\nlet msg1 = {};\nmsg1.payload = msg.payload.sensors[0].data[0].rain_month_mm;\nmsg1.topic = \"Month mm\";\n\nlet msg2 = {};\nmsg2.payload = msg.payload.sensors[0].data[0].rain_year_mm.toFixed(1);\nmsg2.topic = \"Year dm\";\n\nreturn [msg0, msg1, msg2];",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 140,
+        "wires": [
+            [
+                "806d5e5.8b4532"
+            ],
+            [
+                "806d5e5.8b4532"
+            ],
+            [
+                "806d5e5.8b4532"
+            ]
+        ]
+    },
+    {
+        "id": "c5eb19a7.f3f72",
+        "type": "ui_text",
+        "z": "be2909de.a014e",
+        "group": "926fa082.651",
+        "order": 3,
+        "width": "6",
+        "height": "4",
+        "name": "Additional info",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "x": 1080,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "3364cff.916e03",
+        "type": "function",
+        "z": "be2909de.a014e",
+        "name": "Additional info",
+        "func": "let time = msg.payload.generated_at\n\nlet obsTime = new Date(time*1000);\nlet obsLoc = flow.get(\"obsLoc\");\n\nlet obsTimeTxt =\"<h1>Observation Time</h1>\" + obsTime + \"<br />\";\nlet obsLocTxt =\"<h1>Location</h1>\" + obsLoc + \"<br />\";\n\nmsg.payload = obsTimeTxt + obsLocTxt;\n\nreturn msg ",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 500,
+        "wires": [
+            [
+                "c5eb19a7.f3f72"
+            ]
+        ]
+    },
+    {
+        "id": "ba3c547e39133bb9",
+        "type": "function",
+        "z": "be2909de.a014e",
+        "name": "Create url ",
+        "func": "let date = new Date();\n\nconst apiKey = flow.get(\"apiKey\");\nconst apiSecret = flow.get(\"apiSecret\");\nconst apiRequestTimestamp = Math.round(date.getTime()/1000);    // UNIX time\nconst stationId = flow.get(\"stationId\");\n\nlet hmac = crypto.createHmac('sha256', apiSecret);              // Creating hmac object with choosen secret\nlet parametersToHash = 'api-key'+ apiKey + 'station-id' + stationId + 't' + apiRequestTimestamp;\nlet data = hmac.update(parametersToHash);                       // Passing the data to be hashed\nlet apisignature = data.digest('hex');                          // Creating the hmac in the required format\n\nlet service_url = \"https://api.weatherlink.com/v2/current/\" + stationId + \"?api-key=\" + apiKey + \"&t=\" + apiRequestTimestamp + \"&api-signature=\" + apisignature;\n\nmsg.url = service_url;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 120,
+        "y": 260,
+        "wires": [
+            [
+                "629a23ddac42942e"
+            ]
+        ]
+    },
+    {
+        "id": "629a23ddac42942e",
+        "type": "http request",
+        "z": "be2909de.a014e",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 130,
+        "y": 380,
+        "wires": [
+            [
+                "a40e65e2.63ebb8",
+                "e0ab754d.b2172",
+                "753a8dbc.3f2b04",
+                "a3c8d2de.35a028",
+                "5ce0462f.a6e83",
+                "c673a90c.b51e58",
+                "e718ff4c.8da0a",
+                "3364cff.916e03"
+            ]
+        ]
+    },
+    {
+        "id": "953dec9ee84b1afa",
+        "type": "inject",
+        "z": "be2909de.a014e",
+        "name": "Flow Init",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 580,
+        "wires": [
+            [
+                "b33822b10dbbf628"
+            ]
+        ]
+    },
+    {
+        "id": "b33822b10dbbf628",
+        "type": "function",
+        "z": "be2909de.a014e",
+        "name": "Set API Key/Secret & create URL to Get Station",
+        "func": "let date = new Date();\n\nconst apiKey = \"xxx\";                                           // From Davis Weatherlink, use your own !!\nflow.set(\"apiKey\", apiKey);                                     \n\nconst apiSecret = \"yyy\";                                        // From Davis Weatherlink, use your own !!\nflow.set(\"apiSecret\", apiSecret);\n\nconst apiRequestTimestamp = Math.round(date.getTime()/1000);    // UNIX time\n\nlet hmac = crypto.createHmac('sha256', apiSecret);              // Creating hmac object with choosen secret\nlet parametersToHash = 'api-key'+ apiKey + 't' + apiRequestTimestamp;\nlet data = hmac.update(parametersToHash);                       // Passing the data to be hashed\nlet apisignature = data.digest('hex');                          // Creating the hmac in the required format\n\nlet service_url = \"https://api.weatherlink.com/v2/stations?api-key=\" + apiKey + \"&t=\" + apiRequestTimestamp + \"&api-signature=\" + apisignature;\n\nmsg.url = service_url;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 420,
+        "y": 580,
+        "wires": [
+            [
+                "6733f86216df2b3a"
+            ]
+        ]
+    },
+    {
+        "id": "6733f86216df2b3a",
+        "type": "http request",
+        "z": "be2909de.a014e",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 710,
+        "y": 580,
+        "wires": [
+            [
+                "99ce9211a46a5367",
+                "f2892c11eff4e9f7"
+            ]
+        ]
+    },
+    {
+        "id": "99ce9211a46a5367",
+        "type": "debug",
+        "z": "be2909de.a014e",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "f2892c11eff4e9f7",
+        "type": "function",
+        "z": "be2909de.a014e",
+        "name": "Set flow context",
+        "func": "flow.set(\"stationId\", msg.payload.stations[0].station_id);\nflow.set(\"obsLoc\", msg.payload.stations[0].city + \", \" + msg.payload.stations[0].country);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "140972ad.fcd4c5",
+        "type": "ui_group",
+        "name": "column_1",
+        "tab": "bdf7b275.7bc9d",
+        "order": 1,
+        "disp": false,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "d05673f6.d572a",
+        "type": "ui_group",
+        "name": "Column_2",
+        "tab": "bdf7b275.7bc9d",
+        "order": 2,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "926fa082.651",
+        "type": "ui_group",
+        "name": "column_3",
+        "tab": "bdf7b275.7bc9d",
+        "order": 3,
+        "disp": false,
+        "width": "6"
+    },
+    {
+        "id": "bdf7b275.7bc9d",
+        "type": "ui_tab",
+        "name": "Weather City",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
